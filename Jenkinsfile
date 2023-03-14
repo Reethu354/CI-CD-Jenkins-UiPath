@@ -1,4 +1,3 @@
-
 pipeline {
 	    agent any
 	
@@ -39,21 +38,52 @@ pipeline {
 	                echo "Building..with ${WORKSPACE}"
 	                UiPathPack (
 	                      outputPath: "Output\\${env.BUILD_NUMBER}",
+			      outputType: "Process",
 	                      projectJsonPath: "project.json",
-	                      version: [$class: 'ManualVersionEntry', version: "${MAJOR}.${MINOR}.${env.BUILD_NUMBER}"],
+	                      version: AutoVersion(),
 	                      useOrchestrator: false,
 						  traceLevel: 'None'
 	        )
 	            }
 	        }
-	        
+	         // Test Stages
+	        stage('Test') {
+	            steps {
+	                echo 'Testing..the workflow...'
+	            }
+	        }
+	
+
+	         // Deploy Stages
+	        stage('Deploy to UAT') {
+	            steps {
+	                echo "Deploying ${BRANCH_NAME} to UAT "
+	                UiPathDeploy (
+	                packagePath: "Output\\${env.BUILD_NUMBER}",
+	                orchestratorAddress: "${UIPATH_ORCH_URL}",
+	                orchestratorTenant: "${UIPATH_ORCH_TENANT_NAME}",
+	                folderName: "${UIPATH_ORCH_FOLDER_NAME}",
+	                environments: '',
+	                //credentials: [$class: 'UserPassAuthenticationEntry', credentialsId: 'APIUserKey']
+	                credentials: Token(accountName: "${UIPATH_ORCH_LOGICAL_NAME}", credentialsId: 'APIUserKey'), 
+					traceLevel: 'None',
+					entryPointPaths: 'Main.xaml'
+	
+
+	        )
+	            }
+	        }
 	
 
 	
 
-	
-
-	  
+	         // Deploy to Production Step
+	        stage('Deploy to Production') {
+	            steps {
+	                echo 'Deploy to Production'
+	                }
+	            }
+	    }
 	
 
 	    // Options

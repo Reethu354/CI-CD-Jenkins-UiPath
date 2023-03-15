@@ -37,9 +37,10 @@ pipeline {
 	            steps {
 	                echo "Building..with ${WORKSPACE}"
 	                UiPathPack (
-	                      outputPath: "${WORKSPACE}\\Output",
+	                      outputPath: "${WORKSPACE}\\Output"
+,
 			      outputType: "Process",
-	                      projectJsonPath: "project.json",
+	                      projectJsonPath: "C:\\Users\\USER\\OneDrive\\Documents\\UiPath\\UiPath Jenkins CICD Demo_Windows\\project.json",
 	                      version: AutoVersion(),
 	                      useOrchestrator: false,
 						  traceLevel: 'None'

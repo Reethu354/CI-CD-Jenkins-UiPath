@@ -37,7 +37,7 @@ pipeline {
 	            steps {
 	                echo "Building..with ${WORKSPACE}"
 	                UiPathPack (
-	                      outputPath: "Output\\${env.BUILD_NUMBER}",
+	                      outputPath: "${WORKSPACE}\\Output",
 			      outputType: "Process",
 	                      projectJsonPath: "project.json",
 	                      version: AutoVersion(),
